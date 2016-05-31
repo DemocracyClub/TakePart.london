@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+{% load humanize %}
+
+{% block content %}
+{% endblock content %}
+
+
+{% block jumbotron %}
+<div class="jumbotron">
+  <h1 class="page-header">How many people are registered to vote in your area?</h1>
+
+  <form class="form-inline" method="post">
+    {% csrf_token %}
+    {{ form.errors.postcode }}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_form form layout='inline' %}
+    <button type="submit" class="btn btn-primary">Find out</button>
+  </form>
+
+
+</div>
+
+{% endblock  %}
