@@ -1,11 +1,15 @@
 import requests
 
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, RedirectView
 from django.core.urlresolvers import reverse
 
 from register.models import RegisteredPerson, Ward, Borough
 
 from .forms import PostcodeLookupForm
+
+
+class AreaNotCoveredError(ValueError):
+    pass
 
 
 class BaseDataView(object):
@@ -27,6 +31,15 @@ class BaseDataView(object):
                     data['borough'] = data['ward'].borough
         # TODO Postcode not in London
         return data
+
+    def get_data_for_gss(self, gss):
+        data = {}
+        try:
+            data['ward'] = Ward.objects.get(gss=gss)
+            data['borough'] = data['ward'].borough
+            return data
+        except Ward.DoesNotExist:
+            raise AreaNotCoveredError()
 
 
 class HomeView(FormView):
@@ -58,13 +71,24 @@ class HomeView(FormView):
         return context
 
 
-class PostcodeView(BaseDataView, TemplateView):
-    template_name = "postcode.html"
+class PostcodeRedirectView(BaseDataView, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        postcode = self.kwargs['postcode']
+        try:
+            data = self.get_data_for_postcode(postcode)
+            if 'ward' in data:
+                return reverse('ward_view', kwargs={'gss': data['ward'].gss})
+        except:
+            raise
+
+
+class WardView(BaseDataView, TemplateView):
+    template_name = "ward.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        postcode = self.kwargs['postcode']
-        context['area_info'] = self.get_data_for_postcode(postcode)
+        gss = self.kwargs['gss']
+        context['area_info'] = self.get_data_for_gss(gss)
         return context
 
 class LeagueTables(TemplateView):
