@@ -17,8 +17,11 @@ fieldnames.append('SON_AVG')
 
 OUT_FILE = open('../data/images_in_london_and_son.csv', 'w')
 OUT_CSV = csv.DictWriter(OUT_FILE, fieldnames=IMAGES_CSV.fieldnames)
+OUT_CSV.writeheader()
 for line in IMAGES_CSV:
-    print(line['gridimage_id'] in SON_DICT)
-    line['SON_AVG'] = SON_DICT.get(line['gridimage_id'], 5)
+    # print(line['gridimage_id'] in SON_DICT)
+    if line['gridimage_id'] in SON_DICT:
+        if float(SON_DICT.get(line['gridimage_id'])) >= 3.0:
+            line['SON_AVG'] = SON_DICT.get(line['gridimage_id'], 5)
 
-    OUT_CSV.writerow(line)
+            OUT_CSV.writerow(line)

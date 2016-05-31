@@ -2,14 +2,16 @@
 
 {% load bootstrap3 %}
 {% load humanize %}
+{% load staticfiles %}
 
-
+{% block og_image %}{{ area_info.ward.get_share_image_url }}{% endblock og_image %}
+{% block og_title %}Find out how many people are registered near you{% endblock og_title %}
 
 {% block jumbotron %}
 <div class="jumbotron">
+  <img src="{{ area_info.ward.get_share_image_url }}" align="center" style="width:100%">
   <h1 class="page-header">{{ area_info.borough.name }}</h1>
   <h2>Your area: {{ area_info.ward.name }}</h2>
-  {# <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p> #}
 
   <div class="row bignumbers">
     <div class="col-lg-4">

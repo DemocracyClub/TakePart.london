@@ -8,7 +8,7 @@
         position:relative;
         width:1200px;
         height:628px;
-        background:url('background.jpeg');
+        background:url('/media/{{ background_image.dream_image }}');
         background-size: cover;
         background-position: center;
       }
@@ -18,22 +18,23 @@
 
       #message_image header h1 {
         font-family: 'Kanit', sans-serif;
-        position:absolute;
+        position:relative;
         top:20px;
-        display:inline;
         margin:0;
         width:90%;
-        max-width:90%;
-        min-width:40%;
+      }
+      #message_image header h1 + h1 {
+        top:25px;
       }
       #message_image h1 span, #message_image h2 span {
-        background-color:rgba(255,255,255,0.6);
+        background-color:rgba(255,255,255,0.8);
         padding:0 0.5em;
       }
       #message_image footer h2 {
         font-family: 'Kanit', sans-serif;
+        font-size:2em;
         position:absolute;
-        bottom:20px;
+        bottom:30px;
         right:0;
         display:inline;
         margin:0;
@@ -44,13 +45,18 @@
   <body>
     <section id="message_image">
       <header>
+        <h1 class="resize">
+          <span>
+            {{ ward.percent_registered }}% of people in {{ ward.name }} ward
+          </span>
+        </h1>
         <h1>
-          <span>The EU referendum  will</span><br>
-          <span>affect Elephant &amp; Castle</span></h1>
+          <span>are registered to vote</span>
+        </h1>
       </header>
       <footer>
         <h2>
-          <span>Register to vote: gov.uk/register-to-vote</span>
+          <span>Join them: gov.uk/register-to-vote</span>
         </h2>
       </footer>
     </section>
@@ -58,9 +64,13 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="{% static 'js/jquery.fittext.js' %}"></script>
     <script>
-      jQuery("header h1").fitText(1.8);
-      jQuery("footer h2").fitText(1.6);
+
+
+      $(document).ready(function() {
+        jQuery("header h1").fitText(2.3);
+        jQuery("footer h2").fitText(1.6);
+      })
+
     </script>
   </body>
 </html>
-

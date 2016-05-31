@@ -109,8 +109,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
@@ -123,3 +125,11 @@ try:
     from .local import *
 except ImportError:
     pass
+
+
+# --SELECT rw.area, rw.gss, rw.name, rw.population, rw.population_voting_age, rw.population_young, --borough_id, rw.registered_count, rw.percent_registered
+# --FROM register_ward rw
+# --JOIN register_borough rb
+# --ON rb.id=rw.borough_id
+# --WHERE rb.gss IN ('E09000007','E09000001','E09000011','E09000012','E09000013','E09000019','E09000022','E09000023','E09000020','E09000028','E09000030','E09000032','E09000033')
+# --ORDER BY percent_registered DESC

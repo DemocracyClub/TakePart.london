@@ -33,6 +33,12 @@ class Borough(BaseAreaModel):
 class Ward(BaseAreaModel):
     borough = models.ForeignKey(Borough)
 
+    def get_share_image_url(self):
+        try:
+            return self.shareimage.image.url
+        except:
+            return "/static/images/share_images/default_with_text_8_in_10.png"
+
 
 class LLSOA(BaseAreaModel):
     ward = models.ForeignKey(Ward, null=True)
