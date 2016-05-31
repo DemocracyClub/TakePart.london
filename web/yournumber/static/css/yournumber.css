@@ -123,7 +123,6 @@ nav h1 {
     font-size:4em;
 }
 
-
 /* Large up */
 @media only screen  and (min-width : 900px) {
     body {
@@ -135,9 +134,6 @@ nav h1 {
         background-size: cover;
     }
 }
-
-
-
 
 /* tables */
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
