@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.HomeView.as_view(), name="home_view"),
+    url(r'^about/$', views.AboutView.as_view(), name="about_view"),
     url(r'^league_table/$', views.LeagueTables.as_view(), name="league_table"),
     url(r'^postcode/(?P<postcode>[^/]+)$',
         views.PostcodeRedirectView.as_view(),

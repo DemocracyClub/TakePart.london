@@ -42,6 +42,10 @@ class BaseDataView(object):
             raise AreaNotCoveredError()
 
 
+class AboutView(TemplateView):
+    template_name = "about.html"
+
+
 class HomeView(FormView):
     template_name = "home.html"
     form_class = PostcodeLookupForm
