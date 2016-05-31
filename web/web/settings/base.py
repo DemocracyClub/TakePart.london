@@ -113,3 +113,10 @@ STATIC_URL = '/static/'
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 BROKER_URL = 'redis://localhost:6379/0'
+
+
+# .local.py overrides all the common settings.
+try:
+    from .local import *
+except ImportError:
+    pass
