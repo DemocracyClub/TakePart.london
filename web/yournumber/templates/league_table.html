@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load staticfiles %}
+
+{% block content %}
+<table class="table table-striped table-hover sorted_table tablesorter">
+  <thead>
+    <th>Ward name</th>
+    <th>Borough name</th>
+    <th>Percent registered</th>
+    <th>18-25s</th>
+    <th>Voting age population</th>
+  </thead>
+  <tbody>
+    {% for ward in ward_data %}
+    <tr>
+      <td>{{ ward.name }}</td>
+      <td>{{ ward.borough.name }}</td>
+      <td>
+        {% if ward.percent_registered > 99%}
+        99
+        {% else %}
+        {{ ward.percent_registered }}
+        {% endif %}
+      </td>
+      <td>{{ ward.population_young|intcomma }}</td>
+      <td>{{ ward.population_voting_age|intcomma }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock content %}

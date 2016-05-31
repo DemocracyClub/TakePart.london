@@ -66,3 +66,18 @@ class PostcodeView(BaseDataView, TemplateView):
         postcode = self.kwargs['postcode']
         context['area_info'] = self.get_data_for_postcode(postcode)
         return context
+
+class LeagueTables(TemplateView):
+    template_name = "league_table.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        ward_data = Ward.objects.all().filter(percent_registered__gt=40)
+        ward_data = ward_data.order_by('percent_registered')
+        ward_data = ward_data.select_related('borough')
+
+
+        context['ward_data'] = ward_data
+        return context
+
