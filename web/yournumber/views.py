@@ -63,6 +63,6 @@ class PostcodeView(BaseDataView, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        postcode = self.request.GET.get('postcode', 'SE22 8DJ')
+        postcode = self.kwargs['postcode']
         context['area_info'] = self.get_data_for_postcode(postcode)
         return context
