@@ -8,6 +8,9 @@ from register.models import RegisteredPerson, Ward, Borough
 from .forms import PostcodeLookupForm
 
 
+class NotInLondonError(ValueError):
+    pass
+
 class AreaNotCoveredError(ValueError):
     pass
 
@@ -27,9 +30,16 @@ class BaseDataView(object):
                 ))
             for area_id, area in req.json()['areas'].items():
                 if area['type'] == "LBW":
-                    data['ward'] = Ward.objects.get(gss=area['codes']['gss'])
-                    data['borough'] = data['ward'].borough
+                    try:
+                        data['ward'] = Ward.objects.get(
+                            gss=area['codes']['gss'])
+                        data['borough'] = data['ward'].borough
+                    except Ward.DoesNotExist:
+                        raise AreaNotCoveredError
         if 'ward' not in data:
+            raise NotInLondonError
+
+        if data['ward'].percent_registered <= 30:
             raise AreaNotCoveredError
         return data
 
@@ -50,8 +60,10 @@ class PostcodeRedirectView(BaseDataView, RedirectView):
             data = self.get_data_for_postcode(postcode)
             if 'ward' in data:
                 return reverse('ward_view', kwargs={'gss': data['ward'].gss})
-        except AreaNotCoveredError:
+        except NotInLondonError:
             return reverse('not_covered_view')
+        except AreaNotCoveredError:
+            return reverse('no_data_view')
 
 
 class AboutView(TemplateView):
@@ -118,3 +130,7 @@ class LeagueTables(TemplateView):
 
 class NotCovered(TemplateView):
     template_name = "not_covered.html"
+
+
+class NoData(TemplateView):
+    template_name = "no_data.html"
