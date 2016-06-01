@@ -8,10 +8,8 @@ from register.models import Ward
 
 
 def closest_image(point):
-    distance_m = 20
-
     images = GeographImage.objects.exclude(dream_image=None)
-    images = images.filter(location__distance_lt=(point, D(mi=10)))
+    images = images.filter(location__distance_lt=(point, D(mi=15)))
     images = images.annotate(distance=Distance('location', point))
     images = images.order_by('distance').first()
     return images

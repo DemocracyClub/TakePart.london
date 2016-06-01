@@ -31,6 +31,6 @@ class Command(BaseCommand):
         image.save()
 
     def handle(self, **options):
-        images = GeographImage.objects.filter(dream_image=None)
+        images = GeographImage.objects.filter(dream_image='')
         for image in images:
             self.get_image(image)
