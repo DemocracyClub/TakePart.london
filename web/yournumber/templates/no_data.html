@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+
+{% block jumbotron %}
+<div class="jumbotron">
+
+  <img src="{% static "images/share_images/default_with_text_8_in_10.png" %}" align="center" style="width:100%">
+  <h1 class="page-header">{{ area_info.borough.name }}</h1>
+  <h2>Sorry, we don’t have data for your area. Across London, 8 in 10 are registered to vote. If you think this number should be higher, share this to spread the word.</h2>
+</div>
+
+
+{% endblock  %}

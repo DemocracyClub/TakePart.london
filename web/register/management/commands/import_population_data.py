@@ -118,6 +118,11 @@ class Command(BaseCommand):
         ward.percent_registered= 86
         ward.save()
 
+        for ward in Ward.objects.all():
+            if ward.percent_registered and ward.percent_registered > 99:
+                ward.percent_registered = 99
+                ward.save()
+
     def handle(self, **options):
         self.baseline_year = '2014'
         self.year = '2016'
