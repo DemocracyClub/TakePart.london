@@ -29,7 +29,8 @@ class BaseDataView(object):
                 if area['type'] == "LBW":
                     data['ward'] = Ward.objects.get(gss=area['codes']['gss'])
                     data['borough'] = data['ward'].borough
-        # TODO Postcode not in London
+        if 'ward' not in data:
+            raise AreaNotCoveredError
         return data
 
     def get_data_for_gss(self, gss):
@@ -40,6 +41,17 @@ class BaseDataView(object):
             return data
         except Ward.DoesNotExist:
             raise AreaNotCoveredError()
+
+
+class PostcodeRedirectView(BaseDataView, RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        postcode = self.kwargs['postcode']
+        try:
+            data = self.get_data_for_postcode(postcode)
+            if 'ward' in data:
+                return reverse('ward_view', kwargs={'gss': data['ward'].gss})
+        except AreaNotCoveredError:
+            return reverse('not_covered_view')
 
 
 class AboutView(TemplateView):
@@ -80,17 +92,6 @@ class HomeView(FormView):
         return context
 
 
-class PostcodeRedirectView(BaseDataView, RedirectView):
-    def get_redirect_url(self, *args, **kwargs):
-        postcode = self.kwargs['postcode']
-        try:
-            data = self.get_data_for_postcode(postcode)
-            if 'ward' in data:
-                return reverse('ward_view', kwargs={'gss': data['ward'].gss})
-        except:
-            raise
-
-
 class WardView(BaseDataView, TemplateView):
     template_name = "ward.html"
 
@@ -114,3 +115,6 @@ class LeagueTables(TemplateView):
         context['ward_data'] = ward_data
         return context
 
+
+class NotCovered(TemplateView):
+    template_name = "not_covered.html"
