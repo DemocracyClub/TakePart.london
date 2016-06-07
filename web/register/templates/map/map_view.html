@@ -20,6 +20,8 @@
 <script>
 
   var mymap = L.map('mapid').setView([{{ request.GET.y|default:"51.50014092880303"}}, {{ request.GET.x|default:"-0.1253342628479004" }}], 15);
+  mymap.options.maxZoom = 17;
+  mymap.options.minZoom = 15;
 
   L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
