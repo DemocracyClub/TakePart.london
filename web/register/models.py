@@ -43,6 +43,29 @@ class Ward(BaseAreaModel):
 class LLSOA(BaseAreaModel):
     ward = models.ForeignKey(Ward, null=True)
 
+    population_young_2014 = models.IntegerField(blank=True, null=True)
+    population_voting_age_2014 = models.IntegerField(blank=True, null=True)
+    population_2014 = models.IntegerField(blank=True, null=True)
+
+    @property
+    def html_table(self):
+        table_propties = (
+            ('Population', self.population)
+        )
+        table = """
+            <table>{}</table>
+        """
+
+        rows = []
+        for k,v in table_propties:
+            rows.append("""
+            <tr>
+                <th>{}</th>
+                <td>{}</td>
+            </tr>
+            """.format(k,v))
+        return table.format("".join(rows))
+
 
 class RegisteredPerson(models.Model):
     address = models.TextField(blank=True)

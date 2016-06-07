@@ -16,8 +16,6 @@ class Command(BaseCommand):
     postcode_cache = {}
 
 
-
-
     def process_qs(self, qs, **kwargs):
         for area in qs:
             print(area.name, area.gss)
@@ -35,10 +33,10 @@ class Command(BaseCommand):
         self.process_qs(Ward.objects.filter(area=None))
         print("Adding areas to boroughs")
         self.process_qs(Borough.objects.filter(area=None))
-        # print("Adding areas to LLSOAs")
-        # self.process_qs(
-        #     LLSOA.objects.filter(area=None),
-        #     mapit_url="http://mapit.mysociety.org/",
-        #     sleep=3
-        # )
+        print("Adding areas to LLSOAs")
+        self.process_qs(
+            LLSOA.objects.filter(area=None),
+            mapit_url="http://mapit.mysociety.org/",
+            sleep=3
+        )
 

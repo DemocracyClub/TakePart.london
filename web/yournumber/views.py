@@ -3,7 +3,7 @@ import requests
 from django.views.generic import TemplateView, FormView, RedirectView
 from django.core.urlresolvers import reverse
 
-from register.models import RegisteredPerson, Ward, Borough
+from register.models import RegisteredPerson, Ward, Borough, LLSOA
 
 from .forms import PostcodeLookupForm
 
@@ -41,6 +41,8 @@ class BaseDataView(object):
 
         if data['ward'].percent_registered <= 30:
             raise AreaNotCoveredError
+
+
         return data
 
     def get_data_for_gss(self, gss):

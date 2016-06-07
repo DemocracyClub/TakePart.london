@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="mapid"></div>
+
+
+<p>Population numbers are estimates bases on GLA and ONS data and may be wrong.</p>
+<p>Registration counts are based on house hold registrations from the Electoral Register as of the end of May.</p>
+{% endblock content %}
+
+{% block page_js %}
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<style>
+  #mapid { height: 600px; }
+</style>
+
+<script>
+
+  var mymap = L.map('mapid').setView([{{ request.GET.y|default:"51.50014092880303"}}, {{ request.GET.x|default:"-0.1253342628479004" }}], 15);
+
+  L.tileLayer( 'http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+      subdomains: ['otile1','otile2','otile3','otile4']
+  }).addTo( mymap );
+
+  function onEachFeature(feature, layer) {
+    if (feature.properties) {
+          layer.bindPopup(feature.properties.name
+            + '<br>Population: ' + feature.properties.population
+            + '<br>Registration percent: ' + feature.properties.percent_registered
+          );
+      }
+  }
+
+  function makeFillColour(percent) {
+    if (percent < 30) {
+      return "#B9B9B8"
+    }
+    if (percent < 75) {
+      return "#EE6235"
+    }
+    if (percent < 88) {
+      return "#FBF74C"
+    }
+    if (percent <= 100) {
+      return "#B1E432"
+    }
+  }
+
+  var featureLayer = new L.GeoJSON(
+      null, {
+        style: function (feature) {
+          return {
+            color: "#000",
+            fillOpacity: 0.5,
+            fillColor: makeFillColour(feature.properties.percent_registered),
+            weight: 2
+          };
+        },
+        onEachFeature: onEachFeature
+      }).addTo(mymap);
+
+  load_data();
+  mymap.on('moveend', load_data);
+
+  function loadGeoJson(data) {
+      featureLayer.clearLayers();
+      featureLayer.addData(data);
+  }
+
+  function load_data() {
+    var geoJsonUrl = '/map/api/';
+    var defaultParameters = {
+    };
+    var customParams = {
+        bbox: mymap.getBounds().toBBoxString()
+    };
+    var parameters = L.Util.extend(defaultParameters, customParams);
+    console.log(geoJsonUrl + L.Util.getParamString(parameters));
+
+    $.ajax({
+        url: geoJsonUrl + L.Util.getParamString(parameters),
+        dataType: 'json',
+        success: loadGeoJson
+    });
+  }
+</script>
+
+{% endblock page_js %}
