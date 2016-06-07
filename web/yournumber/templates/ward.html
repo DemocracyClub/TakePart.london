@@ -9,8 +9,10 @@
 
 {% block jumbotron %}
 <div class="jumbotron">
-  {# <a href="/map/?x={{ area_info.ward.area.centroid.x }}&y={{ area_info.ward.area.centroid.y }}"> #}
-  {#   New! Explore a detailed map of this area!</a> #}
+  <div class="alert alert-success">
+    <a href="/map/?x={{ area_info.ward.area.centroid.x }}&y={{ area_info.ward.area.centroid.y }}" style="text-decoration:underline">
+      New! Explore a detailed map of this area!</a>
+  </div>
   <img src="{{ area_info.ward.get_share_image_url }}" align="center" style="width:100%">
   <h1 class="page-header">{{ area_info.borough.name }}</h1>
   <h2>Your area: {{ area_info.ward.name }}</h2>
