@@ -29,10 +29,15 @@
   }).addTo( mymap );
 
   function onEachFeature(feature, layer) {
-    if (feature.properties) {
+    if (feature.properties.population) {
           layer.bindPopup(feature.properties.name
             + '<br>Population: ' + feature.properties.population
             + '<br>Registration percent: ' + feature.properties.percent_registered
+          );
+      } else {
+          layer.bindPopup(feature.properties.name
+            + '<br>Population: ' + "no data"
+            + '<br>Registration percent: ' + "no data"
           );
       }
   }
