@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView, View
+from django.conf import settings
 from django.core import serializers
 from django.contrib.gis.geos import Polygon
 from django.shortcuts import redirect
@@ -15,9 +16,9 @@ class MapView(TemplateView):
         if 'postcode' in request.GET:
             try:
                 req = requests.get(
-                    "http://mapit.democracyclub.org.uk/postcode/{}".format(
+                    "http://mapit.mysociety.org/postcode/{}".format(
                         request.GET['postcode']
-                    ))
+                    ), headers=settings.MAPIT_HEADERS)
                 in_london = False
                 for area_id, area in req.json()['areas'].items():
                     if area['type'] == "LBW":

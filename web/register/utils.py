@@ -1,6 +1,7 @@
 import re
 import time
 
+from django.conf import settings
 from django.contrib.gis.geos import Point, GEOSGeometry
 
 import requests
@@ -18,16 +19,10 @@ def _geocode_postcode(postcode):
     if not re.match(r"^[A-Za-z]+[0-9]", postcode):
         raise PostcodeError
     data = {}
-    url = "http://mapit.democracyclub.org.uk/postcode/{}".format(postcode)
-    req = requests.get(url, headers={'User-Agent': 'scraper/sym', })
+    url = "http://mapit.mysociety.org/postcode/{}".format(postcode)
+    req = requests.get(url, headers=settings.MAPIT_HEADERS)
     mapit_data = req.json()
     ERROR_CODES = [404, 400]
-    if mapit_data.get('code') in ERROR_CODES:
-        if mapit_data.get('code') == 404:
-            url = "https://mapit.mysociety.org/postcode/{}".format(postcode)
-            req = requests.get(url)
-            mapit_data = req.json()
-            time.sleep(5)
     if mapit_data.get('code') in ERROR_CODES:
         raise PostcodeError
 
@@ -48,7 +43,7 @@ def get_areas_from_postcode(postcode, areas=None):
     req = requests.get(
         "http://mapit.mysociety.org/postcode/{}?generation=21".format(
             postcode
-        ))
+        ), headers=settings.MAPIT_HEADERS)
 
     for area_id, area in req.json()['areas'].items():
         if area['type'] in areas:
@@ -105,13 +100,13 @@ def geocode_postcode(postcode):
 
 
 def get_wkt_from_mapit(area_id,
-                       mapit_url='http://mapit.democracyclub.org.uk',
-                       sleep=0, try_more=True):
+                       mapit_url='http://mapit.mysociety.org/',
+                       sleep=0):
     req = requests.get(
         '{}/area/{}.wkt'.format(
             mapit_url,
             area_id,
-            ), headers={'User-Agent': 'scraper/sym', })
+            ), headers=settings.MAPIT_HEADERS)
     if sleep:
         time.sleep(sleep)
     print(req.status_code)
@@ -121,14 +116,6 @@ def get_wkt_from_mapit(area_id,
             area = area[7:]
             area = "MULTIPOLYGON(%s)" % area
         return GEOSGeometry(area, srid=27700)
-    elif req.status_code == 404:
-        if try_more:
-            print("Trying a different MaPit")
-            time.sleep(10)
-            return get_wkt_from_mapit(
-                area_id,
-                mapit_url="http://mapit.mysociety.org/",
-                sleep=3, try_more=False)
 
 
 
