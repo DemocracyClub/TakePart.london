@@ -118,6 +118,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 # CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 BROKER_URL = 'redis://localhost:6379/0'
+MAPIT_KEY = None
 
 
 # .local.py overrides all the common settings.
@@ -125,6 +126,11 @@ try:
     from .local import *
 except ImportError:
     pass
+
+
+MAPIT_HEADERS = {}
+if MAPIT_KEY:
+    MAPIT_HEADERS['X-Api-Key'] = MAPIT_KEY
 
 
 # --SELECT rw.area, rw.gss, rw.name, rw.population, rw.population_voting_age, rw.population_young, --borough_id, rw.registered_count, rw.percent_registered

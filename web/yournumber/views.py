@@ -1,6 +1,7 @@
 import requests
 
 from django.views.generic import TemplateView, FormView, RedirectView
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from register.models import RegisteredPerson, Ward, Borough, LLSOA
@@ -25,9 +26,9 @@ class BaseDataView(object):
             data['borough'] = area_info.borough
         else:
             req = requests.get(
-                "http://mapit.democracyclub.org.uk/postcode/{}".format(
+                "http://mapit.mysociety.org/postcode/{}".format(
                     postcode
-                ))
+                ), headers=settings.MAPIT_HEADERS)
             for area_id, area in req.json()['areas'].items():
                 if area['type'] == "LBW":
                     try:
