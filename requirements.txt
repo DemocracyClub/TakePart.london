@@ -3,7 +3,7 @@ anyjson==0.3.3
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
 billiard==3.3.0.23
-celery==3.1.23
+celery==5.2.2
 csvkit==0.9.1
 csvtools==0.5.1
 decorator==4.0.9
